@@ -1,10 +1,11 @@
 import os
 import random
-from PIL import Image
-import numpy as np
-from torch.utils.data import Dataset, DataLoader, Sampler
-from torchvision.transforms import transforms
 from functools import partial
+
+import numpy as np
+from PIL import Image
+from torch.utils.data import DataLoader, Dataset, Sampler
+from torchvision.transforms import transforms
 
 
 def InfiniteSampler(n):
@@ -57,8 +58,13 @@ class FlatFolderDataset(Dataset):
         a = self.transform(a_img)   # anime
         x = self.transform_G(a_img) # grayscale anime
         y = self.transform_G(s_img) # smoothed anime grayscale
-    
-        return c, a, x, y
+
+        return {
+            "p": c,
+            "a": a,
+            "x": x,
+            "y": y
+        }
 
     def __len__(self):
         return max(self.c_size, self.a_size)
@@ -82,7 +88,7 @@ def get_data_iter(args):
     dataset = FlatFolderDataset('./data/val', './data/Shinkai', transform, transform_G)
     dataloader = DataLoader(
         dataset, 
-        batch_size=2, 
+        batch_size=8, 
         sampler=InfiniteSamplerWrapper(dataset), 
         num_workers=0
     )
@@ -90,14 +96,7 @@ def get_data_iter(args):
 
 
 if __name__ == '__main__':
+    from utils import show_tensor_imgs
     it = get_data_iter(None)
     b = next(it)
-    print(len(b))
-    from utils import inverse_transform, tensor2im
-    import matplotlib.pyplot as plt
-    print(b[3][0].data.shape)
-    print(type(b[3][0]))
-    img = tensor2im(b[3][0])
-    print(img.shape)
-    plt.imshow(img)
-    plt.show()
+    show_tensor_imgs(b['a'], rows=2, cols=4)
