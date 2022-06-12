@@ -21,10 +21,10 @@ class AnimeGAN():
         self.model_names = ['G', 'D']
         self.loss_names = ['adv', 'con', 'gra', 'col', 'd']
         self.visual_names = ['p', 'fake']
-        self.netG = Generator(args)
+        self.netG = Generator(args).to(DEVICE)
 
         if self.isTrain:
-            self.netD = Discriminator(args)
+            self.netD = Discriminator(args).to(DEVICE)
             self.loss_tracker = LossSummary()
             self.loss_fn = AnimeGanLoss(args)
             self.optimizer_g = torch.optim.Adam(self.netG.parameters(), lr=args.lr_g, betas=(args.lr_beta1_g, 0.999))
