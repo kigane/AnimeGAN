@@ -73,7 +73,7 @@ class AnimeGAN():
         self.loss_col = col_loss.cpu().detach().item()
 
     def init_generator(self, bar):
-        set_lr(self.optimizer_g, self.args.init_lr)
+        set_lr(self.optimizer_g, self.args.lr_init)
         self.optimizer_g.zero_grad()
 
         fake_img = self.netG(self.p)
