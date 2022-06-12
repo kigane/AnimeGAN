@@ -30,6 +30,7 @@ def train():
                 set_lr(model.optimizer_g, args.lr_g)
                 model.save_networks(step)
                 model.save_samples(prefix='init')
+            continue
         else:
         # calculate loss functions, get gradients, update network weights
             model.optimize_parameters()
