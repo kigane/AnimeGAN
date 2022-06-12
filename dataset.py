@@ -4,6 +4,7 @@ from functools import partial
 
 import numpy as np
 from PIL import Image
+import torch
 from torch.utils.data import DataLoader, Dataset, Sampler
 from torchvision.transforms import transforms
 
@@ -73,30 +74,41 @@ class FlatFolderDataset(Dataset):
         return 'FlatFolderDataset'
 
 
-def get_data_iter(args):
+def create_data_iter(args):
     transform = transforms.Compose([
-        transforms.Resize((256, 256)),
+        transforms.Resize((args.img_size, args.img_size)),
         transforms.ToTensor(),
         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
     ])
     transform_G = transforms.Compose([
         transforms.Grayscale(3),
-        transforms.Resize((256, 256)),
+        transforms.Resize((args.img_size, args.img_size)),
         transforms.ToTensor(),
         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
     ])
-    dataset = FlatFolderDataset('./data/val', './data/Shinkai', transform, transform_G)
+    dataset = FlatFolderDataset(
+        args.content_dir, args.style_dir, transform, transform_G)
     dataloader = DataLoader(
         dataset, 
-        batch_size=8, 
+        batch_size=args.batch_size, 
         sampler=InfiniteSamplerWrapper(dataset), 
-        num_workers=0
+        num_workers=args.num_workers
     )
     return iter(dataloader)
 
 
 if __name__ == '__main__':
     from utils import show_tensor_imgs
-    it = get_data_iter(None)
+    import argparse
+    parser = argparse.ArgumentParser()
+    args = parser.parse_args()
+    args.img_size = 256
+    args.batch_size = 2
+    args.num_workers = 0
+    args.content_dir = './data/val'
+    args.style_dir = './data/Hayao'
+
+    it = create_data_iter(args)
     b = next(it)
-    show_tensor_imgs(b['a'], rows=2, cols=4)
+    imgs = torch.cat((b['p'], b['a'], b['x'], b['y']), dim=0)
+    show_tensor_imgs(imgs, rows=2, cols=4)

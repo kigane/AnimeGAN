@@ -1,0 +1,15 @@
+use_wandb: true             # if true, use wandb for recording
+project: AnimeGAN           # wandb project name
+group: base                 # a filter
+# notes will show in wandb 
+notes: dummy        
+
+# image save dir in log_dir
+name: Hayao                 
+checkpoint_dir: ./checkpoints  # models are saved here
+content_dir: ./data/train     # path to photos
+style_dir: ./data/Hayao     # path to animes, include two subfolders style&smooth
+log_dir: ./log              # path to logs
+batch_size: 4               # The size of batch size
+num_workers: 0              # dataloader threads 
+verbose: true               # print network arch

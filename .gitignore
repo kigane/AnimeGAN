@@ -1,6 +1,7 @@
 wandb
 data
 checkpoints
+log
 t.ipynb
 
 # Byte-compiled / optimized / DLL files
