@@ -60,12 +60,7 @@ class FlatFolderDataset(Dataset):
         x = self.transform_G(a_img) # grayscale anime
         y = self.transform_G(s_img) # smoothed anime grayscale
 
-        return {
-            "p": c,
-            "a": a,
-            "x": x,
-            "y": y
-        }
+        return c, a, x, y
 
     def __len__(self):
         return max(self.c_size, self.a_size)
@@ -110,5 +105,5 @@ if __name__ == '__main__':
 
     it = create_data_iter(args)
     b = next(it)
-    imgs = torch.cat((b['p'], b['a'], b['x'], b['y']), dim=0)
+    imgs = torch.cat((b[0], b[1], b[2], b[3]), dim=0)
     show_tensor_imgs(imgs, rows=2, cols=4)

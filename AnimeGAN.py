@@ -38,10 +38,7 @@ class AnimeGAN():
 
     def set_input(self, input):
         """Unpack input data from the dataloader and perform necessary pre-processing steps."""
-        self.p = input['p'].to(DEVICE)
-        self.a = input['a'].to(DEVICE)
-        self.x = input['x'].to(DEVICE)
-        self.y = input['y'].to(DEVICE)
+        self.p, self.a, self.x, self.y = input
 
     #-----------------------------training------------------------------------
     

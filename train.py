@@ -19,7 +19,7 @@ def train():
     # trainning loop
     for step in (pbar := tqdm(range(1, args.iterations+1))):
         # training
-        batch_data = next(data_iter)
+        batch_data = next(data_iter).to(DEVICE)
         # unpack data from dataset and apply preprocessing
         model.set_input(batch_data)
         if step <= args.init_iters:
